@@ -51,6 +51,7 @@ namespace StubHubScraper.Web.Controllers
 
                     decimal total_price = 0;
                     int total_sales = 0;
+                    int total_tickets = 0;
    
                    foreach (var date in dateList)
                     {
@@ -65,22 +66,18 @@ namespace StubHubScraper.Web.Controllers
                         decimal average = 0; int sales = 0;
 
                         sales = tickets.Count();
+                        total_tickets += sales;
 
 
-                        if (tickets.Count() != 0)
+                        if (sales != 0)
                         {
                             total_price += tickets.Sum(x => x.Qty * x.Price);
                             total_sales += tickets.Sum(x => x.Qty);
-
-                            //average = Math.Round(tickets.Sum(x => x.Qty * x.Price) / tickets.Sum(x => x.Qty), 2);
                             average = Math.Round(total_price/total_sales, 2);
+
                         }
-
-                       
-
-                        if (max < average) max = average;
-                        
-                        charts.Add(new EventChartModel { eventId=event_Id, average = average, volume = sales, date = date.ToString() });
+                            
+                        charts.Add(new EventChartModel { eventId=event_Id, average = average, volume = sales, totalTickets = total_tickets, date = date.ToString() });
                     }
                     if (charts.Count > 0)
                     {
