@@ -1277,8 +1277,9 @@
              //   bulletSize: 12,
              //  compareGraphBullet: "round",
              //   compareGraphBulletSize: 12,
-                lineThickness: 3,
-                compareGraphLineThickness:3,
+             //  lineThickness: 5,
+             //  compareGraphLineThickness: 5,
+         
                 balloonText: "[[title]]:<b>[[value]]</b>",
                 compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
               
@@ -1315,7 +1316,7 @@
             "color": '#888',
 
             dataSets: volumeDatasets,
-
+          
             panels: [{
                 title: "Value",
                 percentHeight: 70,
@@ -1325,7 +1326,9 @@
                 marginLeft: 60,
                 marginTop: 5,
                 marginBottom: 5,
-                recalculateToPercents: "never"
+                recalculateToPercents: "never",
+                columnSpacing: 0,
+                columnWidth:0.7,
             },
             valueAxesSettings: {
                 integersOnly: true,
