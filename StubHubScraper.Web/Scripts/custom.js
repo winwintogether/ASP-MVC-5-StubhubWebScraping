@@ -1760,11 +1760,11 @@
             }],
             panelsSettings: {
                 marginLeft: 60,
-                valueAxesSettings: {
                 marginTop: 5,
                 marginBottom: 5,
                 recalculateToPercents: "never"
             },
+            valueAxesSettings: {
                 minimum: 0,
                 inside: false,
                 showLastLabel: true
