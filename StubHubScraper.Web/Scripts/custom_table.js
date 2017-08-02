@@ -298,7 +298,7 @@
                 }
             },
             select: {
-                style: 'single'
+                style: 'multi'
             },
             // setup rowreorder extension: http://datatables.net/extensions/rowreorder/
             rowReorder: {

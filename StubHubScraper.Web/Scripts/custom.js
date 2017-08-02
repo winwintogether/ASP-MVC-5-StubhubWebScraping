@@ -171,7 +171,6 @@
              }],
             
             panelsSettings: {
-                //    "color": "#fff",
                 marginLeft: 60,
                 marginTop: 5,
                 marginBottom: 5,
@@ -249,7 +248,6 @@
                 }],              
             }],
             panelsSettings: {
-                //    "color": "#fff",
                 marginLeft: 60,
                 marginTop: 5,
                 marginBottom: 5
@@ -567,6 +565,7 @@
             $("#table_2").DataTable().clear();
             $("#table_2").DataTable().draw();
             $("#PickZones").empty();
+            $("#table_title").html("Table Results");
 
             QuickDrawChart([]);
 
@@ -630,6 +629,8 @@
 
              ajaxRequest("get", "/api/quicksearches/" + eventId + "?isNew=1&isSave=" + isSave + "&sectionFrom=" + sectionFrom + "&sectionTo=" + sectionTo + "&lastWeekSalesOnly=" + LastWeekSalesOnly + "&zones=" + all_zones).done(function (data) {
 
+                 
+                 $("#table_title").html(data.EventTitle.substring(0,(data.EventTitle.length-7)) + "&nbsp&nbsp&nbsp&nbsp Venue:" + data.EventVenue);
                  $("#txtEventId").val(data.EventId);
                  $("#SectionFrom").val(data.SectionFrom);
                  $("#SectionTo").val(data.SectionTo);
@@ -765,6 +766,7 @@
 
                 if (data.Id != undefined) {
 
+                    $("#table_title").html(data.EventTitle.substring(0, (data.EventTitle.length - 7)) + "&nbsp&nbsp&nbsp&nbsp Venue:" + data.EventVenue);
                     $("#txtEventId").val(data.EventId);
                     $("#SectionFrom").val(data.SectionFrom);
                     $("#SectionTo").val(data.SectionTo);
@@ -1235,7 +1237,277 @@
     /*******************************Ticket Data*****************************************/
     var DrawTicketChartData = [];
     var DrawTicketTableData = [];
+    var volume_ticket_chart;
+    var average_ticket_chart;
+    var available_ticket_chart;
+    var sold_ticket_chart;
+    var cheapest_ticket_chart;
 
+    function TicketVolumeDrawChart(chartData) {
+
+        var volumeDatasets = [];
+        var volumechartData = [];
+        var stockgraphs = [];
+        var eventList = [];
+        var oldeventId = "";
+
+        $.each(chartData, function (i, v) {
+
+            var item1 = { date: v["date"] };
+            item1[v["eventId"]] = v["volume"];
+            if (oldeventId != v["eventId"]) {
+                oldeventId = v["eventId"];
+                eventList.push(v["eventId"]);
+            }
+
+            volumechartData.push(item1);
+
+        });
+
+
+        for (i = 0; i < eventList.length; i++) {
+
+            
+
+            var item = {
+                type: "column",
+                id: "g" + (i + 1),
+                valueField: eventList[i],
+                comparable: true,
+                compareField: eventList[i],
+                fillAlphas: 0.5,
+                compareGraphFillAlphas: 0.5,
+                compareGraphType: "column",
+                showAllValueLabels: true,
+                balloonText: "[[title]]:<b>[[value]]</b>",
+                compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
+
+            };
+            stockgraphs.push(item);
+
+            var volumeItem = [];
+            $.each(volumechartData, function (j, v) {
+                if (v[eventList[i]]) {
+                    var child = { date: v["date"] };
+                    child[eventList[i]] = v[eventList[i]];
+                    volumeItem.push(child);
+                }
+            });
+
+            var volumedataItem = {
+
+                title: "EventId:" + eventList[i],
+                fieldMappings: [{
+                    fromField: eventList[i],
+                    toField: eventList[i],
+                }],
+                dataProvider: volumeItem,
+                categoryField: "date",
+                compared: i == 0 ? false :true,
+            }
+
+            volumeDatasets.push(volumedataItem);
+        }
+
+        
+        volume_ticket_chart = AmCharts.makeChart("volume_ticket_chart", {
+            type: "stock",
+            "theme": "light",
+            pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
+            "fontFamily": 'Open Sans',
+            "color": '#888',
+
+            dataSets: volumeDatasets,
+
+            panels: [{
+               
+                title: "Value",
+                percentHeight: 70,
+                stockGraphs: stockgraphs,
+                stockLegend: {
+                    periodValueTextComparing: "[[percents.value.close]]%",
+                    periodValueTextRegular: "[[value.close]]",
+                    enabled:false   
+                }
+            }],
+            panelsSettings: {
+                marginLeft: 60,
+                marginTop: 5,
+                marginBottom: 5,
+                recalculateToPercents: "never",
+                columnSpacing: 0,
+                columnWidth: 0.7,
+            },
+            valueAxesSettings: {
+                integersOnly: true,
+                minimum: 0,
+                inside: false,
+                showLastLabel: true
+            },
+
+            chartScrollbarSettings: {
+                graph: "g1",
+                color: "#00F"
+            },
+            chartCursorSettings: {
+                valueBalloonsEnabled: true,
+                graphBulletSize: 1,
+                valueLineBalloonEnabled: true,
+                valueLineEnabled: true,
+                valueLineAlpha: 0.5
+            },
+
+            periodSelector: {
+                dateFormat: "YYYY/MM/DD",
+                periods: [{
+                    period: "DD",
+                    count: 10,
+                    label: "10 days"
+                }, {
+                    period: "MM",
+                    count: 1,
+                    label: "1 month"
+                }, {
+                    period: "MM",
+                    count: 3,
+                    label: "3 months"
+                }, {
+                    period: "MM",
+                    count: 6,
+                    label: "6 months"
+                }, {
+                    period: "MAX",
+                    label: "ALL"
+                }]
+            },
+           
+         
+        });
+    }
+    function TicketAverageDrawChart(chartData) {
+
+        var averageDatasets = [];
+        var averagechartData = [];
+        var stockgraphs = [];
+        var eventList = [];
+        var oldeventId = "";
+
+        $.each(chartData, function (i, v) {
+            var item2 = { date: v["date"] };
+            item2[v["eventId"]] = v["average"];
+
+            if (oldeventId != v["eventId"]) {
+                oldeventId = v["eventId"];
+                eventList.push(v["eventId"]);
+            }
+            averagechartData.push(item2);
+        });
+
+        for (i = 0; i < eventList.length; i++) {
+            var item = {
+
+                id: "g" + (i + 1),
+                valueField: eventList[i],
+                comparable: true,
+                compareField: eventList[i],
+                balloonText: "[[title]]:<b>[[value]]</b>",
+                compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
+            };
+            stockgraphs.push(item);
+
+            var averageItem = [];
+            $.each(averagechartData, function (j, v) {
+                if (v[eventList[i]]) {
+                    var child = { date: v["date"] };
+                    child[eventList[i]] = v[eventList[i]];
+                    averageItem.push(child);
+                }
+            });
+
+            var averagedataItem = {
+
+                title: "EventId:" + eventList[i],
+                fieldMappings: [{
+                    fromField: eventList[i],
+                    toField: eventList[i],
+                }],
+                dataProvider: averageItem,
+                categoryField: "date",
+                compared: i == 0 ? false : true,
+            }
+            averageDatasets.push(averagedataItem);
+        }
+
+        average_ticket_chart = AmCharts.makeChart("average_ticket_chart", {
+            type: "stock",
+            "theme": "light",
+            pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
+            "fontFamily": 'Open Sans',
+            "color": '#888',
+            dataSets: averageDatasets,
+            panels: [{
+                title: "Value",
+                percentHeight: 70,
+                stockGraphs: stockgraphs,
+                stockLegend: {
+                    //periodValueTextComparing: "[[percents.value.close]]%",
+                    periodValueTextRegular: "[[value.close]]",
+                    enabled: false
+                }
+            }],
+            panelsSettings: {
+                marginLeft: 60,
+                marginTop: 5,
+                marginBottom: 5,
+                recalculateToPercents: "never"
+            },
+            valueAxesSettings: {
+                minimum: 0,
+                inside: false,
+                showLastLabel: true
+            },
+            chartScrollbarSettings: {
+                graph: "g1",
+                color: "#00F"
+            },
+            chartCursorSettings: {
+                valueBalloonsEnabled: true,
+                graphBulletSize: 1,
+                valueLineBalloonEnabled: true,
+                valueLineEnabled: true,
+                valueLineAlpha: 0.5
+            },
+
+            periodSelector: {
+                dateFormat: "YYYY/MM/DD",
+                periods: [{
+                    period: "DD",
+                    count: 10,
+                    label: "10 days"
+                }, {
+                    period: "MM",
+                    count: 1,
+                    label: "1 month"
+                }, {
+                    period: "MM",
+                    count: 3,
+                    label: "3 months"
+                }, {
+                    period: "MM",
+                    count: 6,
+                    label: "6 months"
+                }, {
+                    period: "MAX",
+                    label: "ALL"
+                }]
+            },
+            /*      dataSetSelector: {
+                      position: "left",
+                      listHeight: 300
+                  }
+             */
+        });
+    }
     function TicketTotalDrawChart(Data) {
 
         var today = new Date();
@@ -1286,12 +1558,13 @@
                     toField: v["Id"],
                 }],
                 dataProvider:[ totalItem ],
-                categoryField: "date"
+                categoryField: "date",
+                compared: i == 0 ? false : true,
             }
             totalTicketDataSets.push(totaldataItem);
         });
 
-      var total = AmCharts.makeChart("available_ticket_chart", {
+        available_ticket_chart = AmCharts.makeChart("available_ticket_chart", {
             type: "stock",
             "theme": "light",
             pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
@@ -1304,6 +1577,11 @@
                 title: "Value",
                 percentHeight: 70,
                 stockGraphs: stockgraphs,
+                stockLegend: {
+                    //periodValueTextComparing: "[[percents.value.close]]%",
+                    periodValueTextRegular: "[[value.close]]",
+                    enabled: false
+                }
             }],
             panelsSettings: {
                 marginLeft: 60,
@@ -1329,12 +1607,138 @@
                 valueLineEnabled: true,
                 valueLineAlpha: 0.5
             },
-           
+       /*    
             dataSetSelector: {
                 position: "left",
                 listHeight: 300
             },
+        */
+        });
+    }
+    function TicketSoldDrawChart(chartData) {
 
+        var SoldDatasets = [];
+        var SoldchartData = [];
+        var stockgraphs = [];
+        var eventList = [];
+        var oldeventId = "";
+
+        $.each(chartData, function (i, v) {
+            var event_item = { date: v["date"] };
+            event_item[v["eventId"]] = v["totalTickets"];
+
+            if (oldeventId != v["eventId"]) {
+                oldeventId = v["eventId"];
+                eventList.push(v["eventId"]);
+            }
+            SoldchartData.push(event_item);
+        });
+
+        for (i = 0; i < eventList.length; i++) {
+            var item = {
+
+                id: "g" + (i + 1),
+                valueField: eventList[i],
+                comparable: true,
+                compareField: eventList[i],
+
+                balloonText: "[[title]]:<b>[[value]]</b>",
+                compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
+
+
+            };
+            stockgraphs.push(item);
+
+            var SoldItem = [];
+            $.each(SoldchartData, function (j, v) {
+                if (v[eventList[i]]) {
+                    var child = { date: v["date"] };
+                    child[eventList[i]] = v[eventList[i]];
+                    SoldItem.push(child);
+                }
+            });
+            var SolddataItem = {
+
+                title: "EventId:" + eventList[i],
+                fieldMappings: [{
+                    fromField: eventList[i],
+                    toField: eventList[i],
+                }],
+                dataProvider: SoldItem,
+                categoryField: "date",
+                compared: i == 0 ? false : true,
+            }
+            SoldDatasets.push(SolddataItem);
+        }
+
+        sold_ticket_chart = AmCharts.makeChart("sold_ticket_chart", {
+
+            type: "stock",
+            "theme": "light",
+            pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
+            "fontFamily": 'Open Sans',
+            "color": '#888',
+            dataSets: SoldDatasets,
+            panels: [{
+                title: "Value",
+                percentHeight: 70,
+                stockGraphs: stockgraphs,
+                stockLegend: {
+                    //periodValueTextComparing: "[[percents.value.close]]%",
+                    periodValueTextRegular: "[[value.close]]",
+                    enabled: false
+                }
+            }],
+            panelsSettings: {
+                marginLeft: 60,
+                marginTop: 5,
+                marginBottom: 5,
+                recalculateToPercents: "never"
+            },
+            valueAxesSettings: {
+                minimum: 0,
+                inside: false,
+                showLastLabel: true
+            },
+            chartScrollbarSettings: {
+                graph: "g1",
+                color: "#00F"
+            },
+            chartCursorSettings: {
+                valueBalloonsEnabled: true,
+                graphBulletSize: 1,
+                valueLineBalloonEnabled: true,
+                valueLineEnabled: true,
+                valueLineAlpha: 0.5
+            },
+
+            periodSelector: {
+                dateFormat: "YYYY/MM/DD",
+                periods: [{
+                    period: "DD",
+                    count: 10,
+                    label: "10 days"
+                }, {
+                    period: "MM",
+                    count: 1,
+                    label: "1 month"
+                }, {
+                    period: "MM",
+                    count: 3,
+                    label: "3 months"
+                }, {
+                    period: "MM",
+                    count: 6,
+                    label: "6 months"
+                }, {
+                    period: "MAX",
+                    label: "ALL"
+                }]
+            },
+            /*  dataSetSelector: {
+                  position: "left",
+                  listHeight: 300
+              }*/
         });
     }
     function TicketMinpriceDrawChart(Data) {
@@ -1387,13 +1791,14 @@
                     toField: v["Id"],
                 }],
                 dataProvider: [cheapestItem],
-                categoryField: "date"
+                categoryField: "date",
+                compared: i == 0 ? false : true,
             }
             cheapestTicketDataSets.push(ticketdataItem);
         });
 
         
-        var cheapest = AmCharts.makeChart("cheapest_ticket_chart", {
+        cheapest_ticket_chart = AmCharts.makeChart("cheapest_ticket_chart", {
             type: "stock",
             "theme": "light",
             pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
@@ -1406,6 +1811,11 @@
                 title: "Value",
                 percentHeight: 70,
                 stockGraphs: stockgraphs,
+                stockLegend: {
+                    //periodValueTextComparing: "[[percents.value.close]]%",
+                    periodValueTextRegular: "[[value.close]]",
+                    enabled: false
+                }
             }],
             panelsSettings: {
                 marginLeft: 60,
@@ -1432,383 +1842,13 @@
                 valueLineAlpha: 0.5
             },
 
-            dataSetSelector: {
+         /*   dataSetSelector: {
                 position: "left",
                 listHeight: 300
-            },
+            },*/
 
         });
 
-    }
-
-    function TicketVolumeDrawChart(chartData) {
-
-        var volumeDatasets = [];
-        var volumechartData = [];
-        var stockgraphs = [];
-        var eventList = [];
-        var oldeventId = "";
-
-        $.each(chartData, function (i, v) {
-
-            var item1 = { date: v["date"] };
-            item1[v["eventId"]] = v["volume"];
-            if (oldeventId != v["eventId"]) {
-                oldeventId = v["eventId"];
-                eventList.push(v["eventId"]);
-            }
-
-            volumechartData.push(item1);
-       
-        });
-     
-        for (i = 0; i < eventList.length; i++)
-        {
-            var item =   {
-                type: "column",
-                id: "g" + (i + 1),
-                valueField: eventList[i],
-                comparable: true,
-                compareField: eventList[i],
-                fillAlphas: 0.5,
-                compareGraphFillAlphas: 0.5,
-                compareGraphType: "column",
-                showAllValueLabels: true,
-                balloonText: "[[title]]:<b>[[value]]</b>",
-                compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
-              
-                };
-            stockgraphs.push(item);
-
-            var volumeItem = [];
-            $.each(volumechartData, function (j, v) {
-                if (v[eventList[i]]) {
-                    var child = { date: v["date"] };
-                    child[eventList[i]] = v[eventList[i]];
-                    volumeItem.push(child);
-                }
-            });
-            var volumedataItem = {
-               
-                title: "EventId:" + eventList[i],
-                fieldMappings: [{
-                    fromField: eventList[i],
-                    toField: eventList[i],
-                }],
-                dataProvider: volumeItem,
-                categoryField:"date"
-            }
-            volumeDatasets.push(volumedataItem);
-        }
-
-      
-        var volume = AmCharts.makeChart("volume_ticket_chart", {
-            type: "stock",
-            "theme": "light",
-            pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
-            "fontFamily": 'Open Sans',
-            "color": '#888',
-
-            dataSets: volumeDatasets,
-          
-            panels: [{
-                title: "Value",
-                percentHeight: 70,
-                stockGraphs: stockgraphs,
-            }],
-            panelsSettings: {
-                marginLeft: 60,
-                marginTop: 5,
-                marginBottom: 5,
-                recalculateToPercents: "never",
-                columnSpacing: 0,
-                columnWidth:0.7,
-            },
-            valueAxesSettings: {
-                integersOnly: true,
-                minimum:0,
-                inside: false,
-                showLastLabel: true
-            },
-           
-            chartScrollbarSettings: {
-                graph: "g1",
-                color: "#00F"
-            },
-            chartCursorSettings: {
-                valueBalloonsEnabled: true,
-                graphBulletSize: 1,
-                valueLineBalloonEnabled: true,
-                valueLineEnabled: true,
-                valueLineAlpha: 0.5
-            },
-
-            periodSelector: {
-                dateFormat: "YYYY/MM/DD",
-                periods: [{
-                    period: "DD",
-                    count: 10,
-                    label: "10 days"
-                }, {
-                    period: "MM",
-                    count: 1,
-                    label: "1 month"
-                }, {
-                    period: "MM",
-                    count: 3,
-                    label: "3 months"
-                }, {
-                    period: "MM",
-                    count: 6,
-                    label: "6 months"
-                }, {
-                    period: "MAX",
-                    label: "ALL"
-                }]
-            },
-            dataSetSelector: {
-                position: "left",
-                listHeight:300
-            },
-
-        });
-    }
-    function TicketAverageDrawChart(chartData) {
-        
-        var averageDatasets = [];
-        var averagechartData = [];
-        var stockgraphs = [];
-        var eventList = [];
-        var oldeventId = "";
-
-        $.each(chartData, function (i, v) {
-            var item2 = { date: v["date"] };
-            item2[v["eventId"]] = v["average"];
-
-            if (oldeventId != v["eventId"]) {
-                oldeventId = v["eventId"];
-                eventList.push(v["eventId"]);
-            }
-            averagechartData.push(item2);
-        });
-
-        for (i = 0; i < eventList.length; i++) {
-            var item = {
-                            
-                id: "g" + (i + 1),
-                valueField: eventList[i],
-                comparable: true,
-                compareField: eventList[i],
-                balloonText: "[[title]]:<b>[[value]]</b>",
-                compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
-            };
-            stockgraphs.push(item);
-
-            var averageItem = [];
-            $.each(averagechartData, function (j, v) {
-                if (v[eventList[i]]) {
-                    var child = { date: v["date"] };
-                    child[eventList[i]] = v[eventList[i]];
-                    averageItem.push(child);
-                }
-            });
-
-            var averagedataItem = {
-
-                title: "EventId:" + eventList[i],
-                fieldMappings: [{
-                    fromField: eventList[i],
-                    toField: eventList[i],
-                }],
-                dataProvider: averageItem,
-                categoryField: "date"
-            }
-            averageDatasets.push(averagedataItem);
-        }
-
-        var average = AmCharts.makeChart("average_ticket_chart", {
-             type: "stock",
-             "theme": "light",
-             pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
-             "fontFamily": 'Open Sans',
-             "color": '#888',
-             dataSets: averageDatasets,
-             panels: [{
-                 title: "Value",
-                 percentHeight: 70,
-                 stockGraphs: stockgraphs,
-             }],
-             panelsSettings: {
-                 marginLeft: 60,
-                 marginTop: 5,
-                 marginBottom: 5,
-                 recalculateToPercents: "never"
-             },
-             valueAxesSettings: {
-                 minimum: 0,
-                 inside: false,
-                 showLastLabel: true
-             },
-             chartScrollbarSettings: {
-                 graph: "g1",
-                 color: "#00F"
-             },
-             chartCursorSettings: {
-                 valueBalloonsEnabled: true,
-                 graphBulletSize: 1,
-                 valueLineBalloonEnabled: true,
-                 valueLineEnabled: true,
-                 valueLineAlpha: 0.5
-             },
- 
-             periodSelector: {
-                 dateFormat: "YYYY/MM/DD",
-                 periods: [{
-                     period: "DD",
-                     count: 10,
-                     label: "10 days"
-                 }, {
-                     period: "MM",
-                     count: 1,
-                     label: "1 month"
-                 }, {
-                     period: "MM",
-                     count: 3,
-                     label: "3 months"
-                 }, {
-                     period: "MM",
-                     count: 6,
-                     label: "6 months"
-                 }, {
-                     period: "MAX",
-                     label: "ALL"
-                 }]
-             },
-             dataSetSelector: {
-                 position: "left",
-                 listHeight: 300
-             }
-          });
-    }
-    function TicketSoldDrawChart(chartData) {
-
-        var SoldDatasets = [];
-        var SoldchartData = [];
-        var stockgraphs = [];
-        var eventList = [];
-        var oldeventId = "";
-        
-        $.each(chartData, function (i, v) {
-            var event_item = { date: v["date"] };
-            event_item[v["eventId"]] = v["totalTickets"];
-
-            if (oldeventId != v["eventId"]) {
-                oldeventId = v["eventId"];
-                eventList.push(v["eventId"]);
-            }
-            SoldchartData.push(event_item);
-        });
-
-        for (i = 0; i < eventList.length; i++) {
-            var item = {
-                
-                id: "g" + (i + 1),
-                valueField: eventList[i],
-                comparable: true,
-                compareField: eventList[i],
-                
-                balloonText: "[[title]]:<b>[[value]]</b>",
-                compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
-
-
-            };
-            stockgraphs.push(item);
-
-            var SoldItem = [];
-            $.each(SoldchartData, function (j, v) {
-                if (v[eventList[i]]) {
-                    var child = { date: v["date"] };
-                    child[eventList[i]] = v[eventList[i]];
-                    SoldItem.push(child);
-                }
-            });
-            var SolddataItem = {
-
-                title: "EventId:" + eventList[i],
-                fieldMappings: [{
-                    fromField: eventList[i],
-                    toField: eventList[i],
-                }],
-                dataProvider: SoldItem,
-                categoryField: "date"
-            }
-            SoldDatasets.push(SolddataItem);
-        }
-
-        var sold = AmCharts.makeChart("sold_ticket_chart", {
-
-            type: "stock",
-            "theme": "light",
-            pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
-            "fontFamily": 'Open Sans',
-            "color": '#888',
-            dataSets: SoldDatasets,
-            panels: [{
-                title: "Value",
-                percentHeight: 70,
-                stockGraphs: stockgraphs,
-            }],
-            panelsSettings: {
-                marginLeft: 60,
-                marginTop: 5,
-                marginBottom: 5,
-                recalculateToPercents: "never"
-            },
-            valueAxesSettings: {
-                minimum: 0,
-                inside: false,
-                showLastLabel: true
-            },
-            chartScrollbarSettings: {
-                graph: "g1",
-                color: "#00F"
-            },
-            chartCursorSettings: {
-                valueBalloonsEnabled: true,
-                graphBulletSize: 1,
-                valueLineBalloonEnabled: true,
-                valueLineEnabled: true,
-                valueLineAlpha: 0.5
-            },
-
-            periodSelector: {
-                dateFormat: "YYYY/MM/DD",
-                periods: [{
-                    period: "DD",
-                    count: 10,
-                    label: "10 days"
-                }, {
-                    period: "MM",
-                    count: 1,
-                    label: "1 month"
-                }, {
-                    period: "MM",
-                    count: 3,
-                    label: "3 months"
-                }, {
-                    period: "MM",
-                    count: 6,
-                    label: "6 months"
-                }, {
-                    period: "MAX",
-                    label: "ALL"
-                }]
-            },
-            dataSetSelector: {
-                position: "left",
-                listHeight: 300
-            }
-        });
     }
 
     function TicketDataInit() {
@@ -1924,9 +1964,8 @@
             DrawTicketTableData = data;
             TicketTotalDrawChart(data);
             TicketMinpriceDrawChart(data);
-            $.each(data, function (i, v) {
 
-             
+            $.each(data, function (i, v) {
 
                 var row = [];
                                     
@@ -1938,6 +1977,7 @@
                 sdBtab1Grid.DataTable().row.add(row);
                 sdBtab1Grid.DataTable().draw();
             });
+            sdBtab1Grid.DataTable().rows().select();
 
         }).fail(function () {
 
@@ -2038,18 +2078,144 @@
     $("#averageticketchart").on("mouseup", function () {
         setTimeout(function () {
             TicketAverageDrawChart(DrawTicketChartData);
+
+            $.map($("#table_5").DataTable().rows({ selected: false }).data(), function (item) {
+
+                $.each(average_ticket_chart.panels[0].graphs, function (i, v) {
+
+                    if (v.valueField == item[0]) {
+                        if (v.hidden == true) {
+                            v.hidden = false;
+                            average_ticket_chart.validateNow();
+                        }
+                        else {
+                            v.hidden = true;
+                            average_ticket_chart.validateNow();
+                        }
+                    }
+                });
+
+            });
+
         }, 100)
     });
 
     $("#volumeticketchart").on("mouseup", function () {
         setTimeout(function () {
             TicketVolumeDrawChart(DrawTicketChartData);
+            $.map($("#table_5").DataTable().rows({ selected: false }).data(), function (item) {
+
+                $.each(volume_ticket_chart.panels[0].graphs, function (i, v) {
+
+                    if (v.valueField == item[0]) {
+                        if (v.hidden == true) {
+                            v.hidden = false;
+                            volume_ticket_chart.validateNow();
+                        }
+                        else {
+                            v.hidden = true;
+                            volume_ticket_chart.validateNow();
+                        }
+                    }
+                });
+
+            });
         }, 100)
     });
+
     $("#soldticketchart").on("mouseup", function () {
         setTimeout(function () {
             TicketSoldDrawChart(DrawTicketChartData);
+            $.map($("#table_5").DataTable().rows({ selected: false }).data(), function (item) {
+
+                $.each(sold_ticket_chart.panels[0].graphs, function (i, v) {
+
+                    if (v.valueField == item[0]) {
+                        if (v.hidden == true) {
+                            v.hidden = false;
+                            sold_ticket_chart.validateNow();
+                        }
+                        else {
+                            v.hidden = true;
+                            sold_ticket_chart.validateNow();
+                        }
+                    }
+                });
+
+            });
         }, 100)
+    });
+
+    $("#table_5 tbody").on("click", "tr", function () {
+        var eventID = $(this).find("td:first-child").html();
+        
+        $.each(volume_ticket_chart.panels[0].graphs, function (i, v) {
+           
+            if (v.valueField == eventID) {
+                if (v.hidden == true) {
+                    v.hidden = false;
+                    volume_ticket_chart.validateNow();
+                }
+                else {
+                    v.hidden = true;
+                    volume_ticket_chart.validateNow();
+                }
+            }
+        });
+        $.each(average_ticket_chart.panels[0].graphs, function (i, v) {
+
+            if (v.valueField == eventID) {
+                if (v.hidden == true) {
+                    v.hidden = false;
+                    average_ticket_chart.validateNow();
+                }
+                else {
+                    v.hidden = true;
+                    average_ticket_chart.validateNow();
+                }
+            }
+        });
+        $.each(available_ticket_chart.panels[0].graphs, function (i, v) {
+
+            if (v.valueField == eventID) {
+                if (v.hidden == true) {
+                    v.hidden = false;
+                    available_ticket_chart.validateNow();
+                }
+                else {
+                    v.hidden = true;
+                    available_ticket_chart.validateNow();
+                }
+            }
+        });
+        $.each(sold_ticket_chart.panels[0].graphs, function (i, v) {
+
+            if (v.valueField == eventID) {
+                if (v.hidden == true) {
+                    v.hidden = false;
+                    sold_ticket_chart.validateNow();
+                }
+                else {
+                    v.hidden = true;
+                    sold_ticket_chart.validateNow();
+                }
+            }
+        });
+
+        $.each(cheapest_ticket_chart.panels[0].graphs, function (i, v) {
+
+            if (v.valueField == eventID) {
+                if (v.hidden == true) {
+                    v.hidden = false;
+                    cheapest_ticket_chart.validateNow();
+                }
+                else {
+                    v.hidden = true;
+                    cheapest_ticket_chart.validateNow();
+                }
+            }
+        });
+
     });
 
     /*******************************Searching Log*****************************************/
@@ -2063,6 +2229,7 @@
 
     /**********************************User Mangement***********************************/
     function loadUsers() {
+
         InitLoad(1);
         var ColumnData = ["Id", "UserName", "Password", "IsAdmin", "ApiUserName", "ApiPassword", "Environment", "ConsumerKey", "ConsumerSecret", "ApplicationToken"];
         var userGrid = $("#table_9");
