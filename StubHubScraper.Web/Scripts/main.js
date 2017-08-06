@@ -1,31 +1,5 @@
 ﻿
 
-
-
-function ajaxRequest(type, url, data, dataType) { // Ajax helper
-    var options = {
-        dataType: dataType || "json",
-        contentType: "application/json",
-        cache: false,
-        type: type,
-        data: data ? JSON.stringify(data) : null,
-        error: function (xhr, status, error) {
-            var err = eval("(" + xhr.responseText + ")");
-            if (err.message == undefined)
-                dhtmlx.message({ type: "error", text: '<b>' + error + '</b>' });
-            else
-                dhtmlx.message({ type: "error", text: '<b>' + error + '</b>' + "</br>" + err.message });
-        }
-    };
-    var antiForgeryToken = $("#antiForgeryToken").val();
-    if (antiForgeryToken) {
-        options.headers = {
-            'RequestVerificationToken': antiForgeryToken
-        }
-    }
-    return $.ajax(url, options);
-}
-
 function failCallback(elem) {
     alert("Connetion error");
 }
