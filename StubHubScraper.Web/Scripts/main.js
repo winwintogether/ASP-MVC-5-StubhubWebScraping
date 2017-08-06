@@ -9,6 +9,8 @@ searchesGrid,
 searchEventsGrid,
 mainLayout;
 
+
+
 function ajaxRequest(type, url, data, dataType) { // Ajax helper
     var options = {
         dataType: dataType || "json",
