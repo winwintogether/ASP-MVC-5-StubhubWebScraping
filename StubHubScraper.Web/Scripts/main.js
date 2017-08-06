@@ -1,4 +1,26 @@
 ﻿
+
+function failCallback(elem) {
+    alert("Connetion error");
+}
+
+function loadComboData(combo, url, showKey, valKey, val) {
+    ajaxRequest("get", url).done(function (data) {
+        if (data.length > 0) {
+            var options = [];
+            options.push(["", ""]);
+            $.each(data, function (i, v) {
+                options.push([v[valKey], v[showKey]]);
+            });
+            combo.addOption(options);
+
+            if (options.length > 0) combo.setComboValue(options[0][0]);
+
+            if (val != "") combo.setComboValue(val);
+        }
+    }).fail(failCallback);
+}
+
 function showUsersWindow() {
     var windows = new dhtmlXWindows();
     var userId = 0;
