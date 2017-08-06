@@ -1,13 +1,4 @@
-﻿//Global Settings
-var imgPath = {
-    'root': '/Content/imgs/',
-    'grid': '/Content/imgs/',
-    'toolbar': '/Content/imgs/toolbar/',
-},
-tabs,
-searchesGrid,
-searchEventsGrid,
-mainLayout;
+﻿
 
 
 
