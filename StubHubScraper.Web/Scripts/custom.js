@@ -625,41 +625,7 @@
 
                  $("#PickZones").val("");
 
-                 var qsTab2Grid = $("#table_2");
-                 var columnData = ["Zone", "Section", "Row", "Price", "Qty", "DateSold"];
-
                
-                 ajaxRequest("get", "/api/quicktickets/?quickId=" + data.Id + "&isSave=" + isSave).done(function (tdata) {
-
-                     qsTab2Grid.DataTable().clear();
-                     qsTab2Grid.DataTable().draw();
-
-                     var date1 = new Date();
-                     var date2 = null;
-
-                     $.each(tdata, function (i, v) {
-
-                         var row = [];
-
-                         if (i == (tdata.length - 1)) date2 = new Date(v["DateSold"]);
-                         $.each(columnData, function (j, k) {
-
-                             row.push(v[columnData[j]]);
-                         });
-
-                         qsTab2Grid.DataTable().row.add(row);
-                         qsTab2Grid.DataTable().draw();
-                     });
-                    
-                 });
-
-                 ajaxRequest("get", "/api/chartdata/?quickId=" + data.Id).done(function (data) {
-
-                     DrawChartData = data;
-                     QuickDrawChart(data);
-                     
-                 });
-
              });
 
             });
