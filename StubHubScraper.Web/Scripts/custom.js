@@ -546,13 +546,6 @@
             $("#SectionTo").val("");
             $("#LastWeekSalesOnly").prop("checked", false);
 
-            $("#AllSales_1").val("");
-            $("#AllTickets_1").val("");
-            $("#AvgPrice_1").val("");
-            $("#FilterSales_1").val("");
-            $("#FilterTickets_1").val("");
-            $("#FilterAvgPrice_1").val("");
-
             $("#AllSales_2").val("");
             $("#AllTickets_2").val("");
             $("#AvgPrice_2").val("");
