@@ -603,19 +603,6 @@
 
            ajaxRequest("get", "/api/eventzones/?eventId=" + eventId).done(function (data) {
 
-             $.each(data, function (i, v) {
-                    if (i < (data.length - 2))
-                    {
-                        $("#PickZones").append("<option value='" + v["value"] + "'>" + v["text"] + "</option>");                      
-                    }
-                    if (i == (data.length - 2)) {
-                        totalTickets = v["text"].split(":")[1];
-                    }
-
-                    if (i == (data.length - 1)) {
-                        minTicketPrice = v["text"].split(":")[1];
-                    }
-                   
                 });
 
              $('#PickZones option').prop('selected', true);
