@@ -1,39 +1,4 @@
-﻿var TableDatatablesRowreorder = function () {
-
-
-    var initTable1 = function () {
-        var table = $('#table_1');
-
-        var oTable = table.dataTable({
-
-            // Internationalisation. For more info refer to http://datatables.net/manual/i18n
-            "language": {
-                "aria": {
-                    "sortAscending": ": activate to sort column ascending",
-                    "sortDescending": ": activate to sort column descending"
-                },
-                "emptyTable": "No data available in table",
-                "info": "Showing _START_ to _END_ of _TOTAL_ entries",
-                "infoEmpty": "No entries found",
-                "infoFiltered": "(filtered1 from _MAX_ total entries)",
-                "lengthMenu": "_MENU_ entries",
-                "search": "Search:",
-                "zeroRecords": "No matching records found"
-            },
-
-            // Or you can use remote translation file
-            //"language": {
-            //   url: '//cdn.datatables.net/plug-ins/3cfcc339e89/i18n/Portuguese.json'
-            //},
-
-            // setup buttons extentension: http://datatables.net/extensions/buttons/
-            buttons: [
-                { extend: 'print', className: 'btn dark btn-outline' },
-                { extend: 'pdf', className: 'btn green btn-outline' },
-                { extend: 'csv', className: 'btn purple btn-outline ' }
-            ],
-            select: {
-                style: 'single'
+﻿e'
             },
             // setup rowreorder extension: http://datatables.net/extensions/rowreorder/
 
