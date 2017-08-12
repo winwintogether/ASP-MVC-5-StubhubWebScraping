@@ -1,28 +1,7 @@
 ﻿$(document).ready(function () {
 
 
-        var antiForgeryToken = $("#antiForgeryToken").val();
-
-        if (antiForgeryToken) {
-            options.headers = {
-                'RequestVerificationToken': antiForgeryToken
-            };
-        }
-
-        return $.ajax(url, options);
-    }
-
-    function failCallback(elem) {
-
-        bootbox.alert("Connetion error");
-
-    }
-
-    function loadComboData(combo, url, showKey, valKey, val) {
-
-        ajaxRequest("get", url).done(function (data) {
-
-            if (data.length > 0) {
+     
 
                 var options = [];
                 options.push(["", ""]);
