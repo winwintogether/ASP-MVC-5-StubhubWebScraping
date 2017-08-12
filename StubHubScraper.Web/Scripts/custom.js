@@ -1,22 +1,6 @@
 ﻿$(document).ready(function () {
 
-    /*********************************Global Variable*******************************/
-    var RequestNum = 0;
-    var ResponseNum = 0;
-    var selected_TicketId = null;
-  
-    var selected_tableGridId = 0;
-    var selected_tableEventGridId = null;
-    var Daterange = 10;
-    /******************************   Shared Function *******************************/
 
-    function ajaxRequest(type, url, data, dataType) { // Ajax helper
-
-        var options = {
-            dataType: dataType || "json",
-            contentType: "application/json",
-            cache: false,
-            type: type,
             data: data ? JSON.stringify(data) : null,
             success: function (data) {
                 ResponseNum++;
