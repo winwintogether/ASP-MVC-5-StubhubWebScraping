@@ -1,26 +1,6 @@
 ﻿$(document).ready(function () {
 
 
-            data: data ? JSON.stringify(data) : null,
-            success: function (data) {
-                ResponseNum++;
-                CheckEndProcess();
-            },
-            error: function (xhr, status, error) {
-                LoadingOff();
-
-               //var err = eval("(" + xhr.responseText + ")");
-               //if(err.message == undefined)
-               //  alert("undefined error");
-               //else
-               //
-                console.log(JSON.stringify(xhr));
-                bootbox.alert(error);
-
-            },
-            timeout: 1000000
-        };
-
         var antiForgeryToken = $("#antiForgeryToken").val();
 
         if (antiForgeryToken) {
