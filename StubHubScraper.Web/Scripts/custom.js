@@ -3,32 +3,7 @@
 
      
 
-           
-            bootbox.alert("Error when loading data!");
-
-        });
-    }
-
-    function LoadingOn() {
-        $("#loading").addClass("loading");
-    }
-
-    function LoadingOff() {
-
-        $("#loading").removeClass("loading");
-    }
-
-    function CheckEndProcess() {
-        if (RequestNum == ResponseNum) {
-            LoadingOff();
-        }
-    }
-
-    function InitLoad(reqnum) {
-        RequestNum = reqnum;
-        ResponseNum = 0;
-        LoadingOn();
-    }
+         
 
     /*****************************Quick Search**************************************/
     var totalTickets=0;
