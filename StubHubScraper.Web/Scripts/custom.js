@@ -1,51 +1,5 @@
 ﻿$(document).ready(function () {
 
-
-     
-
-           
-            bootbox.alert("Error when loading data!");
-
-        });
-    }
-
-    function LoadingOn() {
-        $("#loading").addClass("loading");
-    }
-
-    function LoadingOff() {
-
-        $("#loading").removeClass("loading");
-    }
-
-    function CheckEndProcess() {
-        if (RequestNum == ResponseNum) {
-            LoadingOff();
-        }
-    }
-
-    function InitLoad(reqnum) {
-        RequestNum = reqnum;
-        ResponseNum = 0;
-        LoadingOn();
-    }
-
-    /*****************************Quick Search**************************************/
-    var totalTickets=0;
-    var minTicketPrice = 0;
-    var DrawChartData = [];
-   
-    function QuickDrawChart(chartData) {
-        var volume = AmCharts.makeChart("volume_chart", {
-            type: "stock",
-            "theme": "light",
-            pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
-            "fontFamily": 'Open Sans',
-            "color": '#888',
-
-            dataSets: [{
-                color: "#b0de09",
-                fieldMappings: [{
                     fromField: "volume",
                     toField: "volume"
                 },
