@@ -3,31 +3,7 @@
 
      
 
-             
-            var tData = {};
-            tData.total_count = data.length;
-            tData.pos = 0;
-            tData.data = data;
-
-            grid.DataTable().clear();
-            grid.DataTable().draw();
-
-            console.log(url);
-            $.each(data, function (i, v) {
-
-                var row = [];
-
-                $.each(columnData, function (j, k) {
-
-                    row.push(v[columnData[j]]);
-                });
-
-                grid.DataTable().row.add(row);
-                grid.DataTable().draw();
-            });
-
-        }).fail(function () {
-
+           
             bootbox.alert("Error when loading data!");
 
         });
