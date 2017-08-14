@@ -3,30 +3,7 @@
 
      
 
-                var options = [];
-                options.push(["", ""]);
-
-                $.each(data, function (i, v) {
-                    options.push([v[valKey], v[showKey]]);
-                    combo.append("<option value='" + v[valKey] + "'>" + v[showKey] + "</option>");
-                });
-
-                if (options.length > 0)
-
-                    combo.val(options[0][0]);
-
-                if (val != "")
-
-                    combo.val(val);
-
-            }
-        }).fail(failCallback);
-    }
-
-    function loadGridData(url, grid, columnData) {
-
-        ajaxRequest("get", url).done(function (data) {
-
+             
             var tData = {};
             tData.total_count = data.length;
             tData.pos = 0;
