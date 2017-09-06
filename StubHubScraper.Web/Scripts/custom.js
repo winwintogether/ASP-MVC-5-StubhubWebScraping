@@ -1,12 +1,6 @@
 ﻿$(document).ready(function () {
 
-                    fromField: "volume",
-                    toField: "volume"
-                },
-                ],
-                dataProvider: chartData,
-                categoryField: "date"
-            }],
+                   
            
             panels: [{
                 title: "Value",
