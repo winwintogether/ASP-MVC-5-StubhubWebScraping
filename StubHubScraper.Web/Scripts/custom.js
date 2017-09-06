@@ -2,13 +2,7 @@
 
                    
            
-            
-            panelsSettings: {
-                marginLeft: 60,
-                marginTop: 5,
-                marginBottom: 5,
-               
-            },
+           
             valueAxesSettings: {
                 inside: false,
                 showLastLabel: true
