@@ -2,17 +2,6 @@
 
                    
            
-            panels: [{
-                title: "Value",
-                percentHeight: 70,
-                stockGraphs: [{
-                    id: "g1",
-                    type:"column",
-                    valueField: "volume",
-                    fillAlphas: 0.5,
-                    fillColors: "#b0de09",
-                }]
-             }],
             
             panelsSettings: {
                 marginLeft: 60,
