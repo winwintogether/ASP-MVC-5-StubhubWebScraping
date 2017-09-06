@@ -1,16 +1,6 @@
 ﻿$(document).ready(function () {
 
-                   
            
-           
-            valueAxesSettings: {
-                inside: false,
-                showLastLabel: true
-            },
-            chartScrollbarSettings: {
-                graph: "g1",
-                color: "#00F"
-            },
             chartCursorSettings: {
                 valueBalloonsEnabled: true,
                 graphBulletSize: 1,
