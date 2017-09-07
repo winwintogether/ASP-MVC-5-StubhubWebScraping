@@ -1,19 +1,4 @@
-﻿$(document).ready(function () {
-
-     
-
-            "color": '#888',
-            dataSets: [{
-                color: "#b0de09",
-                fieldMappings: [{
-                    fromField: "average",
-                    toField: "average"
-                },
-              
-                ],
-                dataProvider: chartData,
-                categoryField: "date"              
-            }],
+﻿$(document).ready(function () {             
 
             panels: [{
                 title: "Value",             
