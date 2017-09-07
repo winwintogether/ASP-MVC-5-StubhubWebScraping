@@ -1,39 +1,6 @@
 ﻿$(document).ready(function () {
 
-           
-           
-
-            periodSelector: {
-                dateFormat:"YYYY/MM/DD",
-                periods: [{
-                    period: "DD",
-                    count: 10,
-                    label: "10 days"
-                }, {
-                    period: "MM",
-                    count: 1,
-                    label: "1 month"
-                }, {
-                    period: "MM",
-                    count: 3,
-                    label: "3 months"
-                }, {
-                    period: "MM",
-                    count: 6,
-                    label: "6 months"
-                }, {
-                    period: "MAX",
-                    label: "ALL"
-                }]
-            },
-
-        });
-
-        var average = AmCharts.makeChart("average_chart", {
-            type: "stock",
-            "theme": "light",
-            pathToImages: "Content/assets/global/plugins/amcharts/amcharts/images/",
-            "fontFamily": 'Open Sans',
+     
 
             "color": '#888',
             dataSets: [{
