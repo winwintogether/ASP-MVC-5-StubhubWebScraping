@@ -1,13 +1,7 @@
 ﻿$(document).ready(function () {
 
            
-            chartCursorSettings: {
-                valueBalloonsEnabled: true,
-                graphBulletSize: 1,
-                valueLineBalloonEnabled: true,
-                valueLineEnabled: true,
-                valueLineAlpha: 0.5
-            },
+           
 
             periodSelector: {
                 dateFormat:"YYYY/MM/DD",
