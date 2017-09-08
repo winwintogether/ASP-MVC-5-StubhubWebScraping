@@ -1,10 +1,7 @@
 ﻿$(document).ready(function () {             
 
           
-            chartScrollbarSettings: {
-                graph: "g1",
-                color: "#00F"
-            },
+           
             
             chartCursorSettings: {
                 valueBalloonsEnabled: true,
