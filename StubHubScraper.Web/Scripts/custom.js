@@ -1,15 +1,6 @@
 ﻿$(document).ready(function () {             
 
-            panels: [{
-                title: "Value",             
-                percentHeight: 70,
-                stockGraphs: [{
-                    id: "g1",
-                    valueField: "average",
-                    fillAlphas: 0.5,
-                    fillColors: "#b0de09",
-                }],              
-            }],
+          
             panelsSettings: {
                 marginLeft: 60,
                 marginTop: 5,
